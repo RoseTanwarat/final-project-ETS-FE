@@ -6,6 +6,7 @@ import QuizPageTeacher from "./components/QuizPageTeacher.vue"
 import QuizPageStudent from "./components/QuizPageStudent.vue"
 import HomeStudentPage from "./components/HomeStudentPage.vue"
 import QuizPage from "./components/QuizPage.vue"
+import ScorePage from "./components/ScorePage.vue"
 import VueRouter  from 'vue-router';
 import Vue from "vue";
 
@@ -35,7 +36,7 @@ const routes = [
     {
         name: "QuizPageTeacher",
         component: QuizPageTeacher,
-        path: "/quiz-teacher",
+        path: "/quiz-teacher/:quizId",
     },
     {
         name: "QuizPageStudent",
@@ -52,6 +53,12 @@ const routes = [
         component: QuizPage,
         path: "/quiz",
     },
+    {
+        name: "ScorePage",
+        component: ScorePage,
+        path: "/score",
+    },
+    
     
     
 ]

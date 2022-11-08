@@ -7,7 +7,7 @@ import * as models from "@/models";
 Vue.use(Vuex);
 
 const axiosConfig = {
-  baseURL: "http://localhost:3000"
+  baseURL: "http://localhost:1337"
 };
 
 const ormPlugin = vuexOrmPlugin.register(axiosConfig);

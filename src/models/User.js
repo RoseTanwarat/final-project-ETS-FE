@@ -1,4 +1,5 @@
 import { BaseModel } from "./BaseModel";
+import Role from "./Role";
 
 export class User extends BaseModel {
   static get entity() {
@@ -12,23 +13,23 @@ export class User extends BaseModel {
   static fields() {
     return {
       id: this.attr(null),
-      firstname: this.attr(null),
-      lastname: this.attr(null),
       email: this.attr(null),
+      user_role_id: this.attr(null),
+      user_role: this.belongsTo(Role, 'user_role_id'),
     };
-  }
-
-  static get globalApiConfig() {
-    return {
-      headers: {"Access-Control-Allow-Origin": "*"}
-    }
   }
 
   static apiConfig = {
     actions: {
-      getUsers() {
-        return this.get('/user-all')
-      }
+      getUsers(params = {}) {
+        return this.get('/users', {
+          params
+        })
+      },
+
+      register(body = {}) {
+        return this.post('/users', body)  
+      },
     },
   };
 }

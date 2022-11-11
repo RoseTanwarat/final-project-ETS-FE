@@ -59,8 +59,6 @@ const routes = [
         path: "/score",
     },
     
-    
-    
 ]
 
 const router = new VueRouter({

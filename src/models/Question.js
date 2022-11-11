@@ -1,6 +1,6 @@
 import { BaseModel } from "./BaseModel";
 import Quiz from "./Quiz";
-
+import Choice from "./Choice";
 
 export class Question extends BaseModel {
   static get entity() {
@@ -17,13 +17,14 @@ export class Question extends BaseModel {
       question_type: this.attr(null),
       question_ans: this.attr(null),
       question_name: this.attr(null),
-      question_choice1: this.attr(null),
-      question_choice2: this.attr(null),
-      question_choice3: this.attr(null),
+      // question_choice1: this.attr(null),
+      // question_choice2: this.attr(null),
+      // question_choice3: this.attr(null),
+      question_choice: this.hasMany(Choice, 'question_id'),
       question_score: this.attr(null),
       quiz_id: this.attr(null),
       quiz: this.belongsTo(Quiz,'quiz_id'),
-      post_at: this.attr(null),
+      // post_at: this.attr(null),
     };
   }
 

@@ -10,9 +10,10 @@
 
         <div v-for="(quiz, index) in quizs" :key="index">
             <label>title : <input type="text" class="title" v-model="quiz.title"></label>
-            <!-- <label>count : <input type="text" class="ans" v-model="quiz.count"></label> -->
             <label>status : <input type="text" v-model="quiz.status"></label>
             <h2 v-if="required">Title is required.</h2>
+            <label>Quiz date : <input type="datetime-local" id="qiuztime" name="qiuztime" v-model="quiz.quizDate">
+            </label>
             <button @click="onClickNext()">Next</button>
         </div>
         <!-- <button @click="onClickTest(id)">{{ this.id }}</button><br> -->
@@ -36,6 +37,7 @@ export default {
             quizs: [],
             status: "",
             quiz: "",
+            quizDate: "",
             user_id: "",
             required: false,
             email: '',
@@ -66,19 +68,22 @@ export default {
                 title: "",
                 // count: "",
                 status: "Draft",
+                quizDate: ""
             })
         },
         // async onClickTest(id) {
         //     this.$router.push({ name: 'QuizPageTeacher', params: { quizId: id } })
         // },
         async onClickNext() {
+            console.log(this.quizs[0].quizDate);
             if (this.quizs[0].title.length === 0) {
                 return this.required = "false"
             } else {
                 const result = await Quiz.api().titleQuiz({
                     quiz_title: this.quizs[0].title,
                     quiz_status: this.quizs[0].status,
-                    teacher: this.user[0].id
+                    teacher: this.user[0].id,
+                    post_at: new Date(this.quizs[0].quizDate),
                 });
                 console.log(result);
                 console.log('id ของ quiz นี้', result.entities.Quizzes[0].id);

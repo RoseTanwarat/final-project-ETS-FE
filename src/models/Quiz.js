@@ -22,6 +22,7 @@ export class Quiz extends BaseModel {
         teacher: this.belongsTo(User, 'teacher_id'),
         created_at: this.attr(null),
         updated_at: this.attr(null),
+        post_at: this.attr(null),
       };
     }
   

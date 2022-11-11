@@ -23,27 +23,32 @@
                     <option value="choice">Choice</option>
                 </select>
                 <div v-if="question.type && question.type === 'choice'" class="checkbox">
-                    <form>
+                    <!-- <form>
                         <input type="text" id="choice1" placeholder="choice1" v-model="question.choice1"><br>
                         <input type="text" id="choice2" placeholder="choice2" v-model="question.choice2"><br>
                         <input type="text" id="choice3" placeholder="choice3" v-model="question.choice3"><br>
-                    </form>
+                    </form> -->
+                    <button id="add_choice" @click="addChoice">Add</button>
+                    <div v-for="(choice, index) in choices" :key="index">
+                        <label>Choice {{ index + 1 }}: <input type="radio" name="choice" v-model="choice.input"></label>
+                        <input type="text" id="choice" placeholder="choice" v-model="choice.choice">
+                        <button @click="removeChoice(index)">Remove</button>
+                    </div>
                 </div>
             </div>
-            <!-- <span>Total Question :{{index+1}}</span><br> -->
-        </div>
+        </div><br>
 
-        <div class="setTimeOut">
+        <!-- <div class="setTimeOut">
             <form>
                 <label for="qiuzime">Quiz date : </label>
                 <input type="datetime-local" id="qiuztime" name="qiuztime" v-model="quizDate">
-                <!-- <input type="submit"> -->
             </form>
-        </div>
+        </div> -->
+
         <span class="total_question">Total Question :{{ count }}</span><br>
-        <span class="total_score">Total Score : {{ totalScore }} </span>
-        <h3 v-if="status">Draft</h3>
-        <!-- <button class="btn" @click="addTitle">Submit</button> -->
+        <span class="total_score">Total Score : {{ totalScore }} </span><br>
+        <label>Quiz date : {{ new Date(quiz?.post_at) }}</label><br>
+        <label v-if="status">Draft</label>
         <button class="btn" @click="addData">Submit</button>
     </div>
 </template>
@@ -52,6 +57,8 @@
 
 import Question from '@/models/Question'
 import Quiz from '@/models/Quiz'
+//import { Score } from '@/models'
+//import Choice from '@/models/Choice'
 
 export default {
     name: 'QuizPageTeacher',
@@ -73,21 +80,14 @@ export default {
                 title: "",
                 answer: "",
                 type: "text",
-                choice1: "",
-                choice2: "",
-                choice3: ""
+                // choice1: "",
+                // choice2: "",
+                // choice3: "",
             }],
             totalScore: "",
-            // messageHr: "",
-            // messageMin: "",
-            // messageSec: "",
             count: 1,
             status: false,
-            // title: "",
-            // answer: "",
-            // choice1: "",
-            // choice2: "",
-            // choice3: "",
+            choices: []
         }
     }, computed: {
         isRoute() {
@@ -108,6 +108,7 @@ export default {
         dateTime() {
             return this.quizDate;
         },
+
     },
     methods: {
         addQues: function () {
@@ -135,17 +136,17 @@ export default {
             this.questions.splice(index, 1)
 
         },
-        // addTitle: function () {
-        //     sessionStorage.messageTitle = this.messageTitle;
-        //     // const test = 1234
-        //     // sessionStorage.messageTime = test
-        //     const Hr = Number(this.messageHr) * 3600
-        //     const Min = Number(this.messageMin) * 60
-        //     sessionStorage.messageTime = (Hr + Min + Number(this.messageSec)) * 1000;
+        addChoice: function () {
+            return this.choices.push({
+                choice: '',
+                input: ''
+            })
+        },
 
-        //     // console.log(this.messageTitle)
-        //     location.href = '/home-student';
-        // },
+        removeChoice: function (index) {
+            this.choices.splice(index, 1)
+        },
+
         addData: async function () {
             // console.log(this.quizId);
             // console.log({ quiz: this.quizId });
@@ -156,13 +157,14 @@ export default {
             // console.log('now ===', dateTimeNow)
             // console.log('QuizDate ===', dateTimeInput)
             // console.log(typeof this.quizDate)
+            console.log('169', this.questions);
             for (let index = 0; index < this.questions.length; index++) {
                 const item = this.questions[index];
                 item.quiz = this.quizId;
-                item.post_at = new Date(this.dateTime);
+                //item.post_at = new Date(this.dateTime);
             }
-            console.log(this.questions);
-            const titleQuestion = await Question.api().postQuestions(this.questions)
+            console.log('175', this.questions);
+            //const titleQuestion = await Question.api().postQuestions(this.questions)
 
             // this.questions.forEach(async (item, index) => {
             //     console.log('foreach' + index, item);
@@ -174,8 +176,8 @@ export default {
             //         question_choice2: item.choice2,
             //         question_choice3: item.choice3,
             //     })
-            console.log(titleQuestion);
-            this.$router.push({ name: 'HomeTeacherPage' })
+            //console.log(titleQuestion);
+            //this.$router.push({ name: 'HomeTeacherPage' })
 
             //this.$router.push({ name: 'HomeStudentPage', params: { quizId: this.quizId } })
 
@@ -243,7 +245,7 @@ export default {
         if (this.getQuestions !== null) {
             this.post()
         }
-
+        //Choice.api().getChoice()
     }
 }
 

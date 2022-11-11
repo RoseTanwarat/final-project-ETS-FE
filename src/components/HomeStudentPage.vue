@@ -73,42 +73,42 @@ export default {
             this.$router.push({ name: 'QuizPageStudent', params: { quizId: id } })
         },
         checkTime() {
-
             // this.getQuizs.forEach(item => {
-            //     //console.log(item.created_at);
-            //     const date = new Date(item.created_at).getDate()
-            //     if (date === 18) {
-            //         console.log('83', item);
+            //     // console.log(item.questions[0].post_at);
+            //     // item.post_at = this.
+            //     let isValid = false
+            //     item.questions.forEach(data => {
+            //         if (data && data.post_at) {
+            //             const dateTimeInput = new Date(data.post_at)
+            //             const dateTimeNow = new Date();
+            //             if (dateTimeInput < dateTimeNow) {
+            //                 //console.log('55555555555555');
+            //                 isValid = true
+            //             }
+            //         }
+
+            //     })
+            //     if (isValid) {
             //         this.test.push(item)
-            //         //console.log('555555555555');
             //     }
 
             // })
-            // console.log(this.test);
+            // this.test.reverse()
+            // console.log('102', this.test);
 
             this.getQuizs.forEach(item => {
-                // console.log(item.questions[0].post_at);
-                // item.post_at = this.
-                let isValid = false
-                item.questions.forEach(data => {
-                    if (data && data.post_at) {
-                        const dateTimeInput = new Date(data.post_at)
-                        const dateTimeNow = new Date();
-                        if (dateTimeInput < dateTimeNow) {
-
-                            //console.log('55555555555555');
-                            isValid = true
-                        }
+                if (item && item.post_at) {
+                    console.log('101', item.post_at);
+                    const dateTimeInput = new Date(item.post_at)
+                    const dateTimeNow = new Date();
+                    if (dateTimeInput < dateTimeNow) {
+                        //console.log('55555555555555');
+                        console.log('106', item);
+                        this.test.push(item)
                     }
-
-                })
-                if (isValid) {
-                    this.test.push(item)
                 }
-
             })
-            this.test.reverse()
-            console.log('102', this.test);
+            //console.log('111', this.test);
 
         }
 

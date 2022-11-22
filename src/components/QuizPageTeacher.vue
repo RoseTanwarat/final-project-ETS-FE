@@ -284,7 +284,7 @@ export default {
 
         },
         post() {
-            console.log(this.getQuestions[0].question_score);
+            //console.log(this.getQuestions[0].question_score);
             this.questions.splice(this.questions, 1)
             this.count = 0
             this.getQuestions.forEach(item => {

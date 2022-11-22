@@ -9,12 +9,13 @@
             </div>
         </div><br>
 
-        <div v-for="(question, index) in questions" :key="index">
-            <label>Question {{ index + 1 }}: <input type="text" class="question" v-model="question.title"></label>
+        <div v-for="(question, indexOfQuestion) in questions" :key="indexOfQuestion">
+            <label>Question {{ indexOfQuestion + 1 }}: <input type="text" class="question"
+                    v-model="question.title"></label>
             <label>Ans :<input type="text" class="ans" v-model="question.answer"></label>
             <label>Score : <input type="number" min="0" max="100" v-model="question.score" @keydown="handleChange()">
             </label>
-            <button @click="remove(index)">Remove</button>
+            <button @click="remove(indexOfQuestion)">Remove</button>
 
             <div class="form-group">
                 <label>Type</label>
@@ -28,12 +29,21 @@
                         <input type="text" id="choice2" placeholder="choice2" v-model="question.choice2"><br>
                         <input type="text" id="choice3" placeholder="choice3" v-model="question.choice3"><br>
                     </form> -->
-                    <button id="add_choice" @click="addChoice">Add</button>
-                    <div v-for="(choice, index) in choices" :key="index">
-                        <label>Choice {{ index + 1 }}: <input type="radio" name="choice" v-model="choice.input"></label>
-                        <input type="text" id="choice" placeholder="choice" v-model="choice.choice">
-                        <button @click="removeChoice(index)">Remove</button>
+                    <div>
+                        <button id="add_choice" @click="addChoice(indexOfQuestion)">Add</button>
                     </div>
+                    <form>
+                        <div v-for="(choice, index) in question.choices" :key="index">
+                            <label>Choice {{ index + 1 }}: </label>
+                            <input :id="'choice' + index" type="radio" name="choice" v-model="choice.input"
+                                @click="selectedChoice(index, indexOfQuestion)">
+                            <input type="text" placeholder="choice" v-model="choice.name">
+                            <button @click="removeChoice(indexOfQuestion, index)">Remove</button>
+
+                        </div>
+                    </form>
+
+
                 </div>
             </div>
         </div><br>
@@ -57,7 +67,7 @@
 
 import Question from '@/models/Question'
 import Quiz from '@/models/Quiz'
-//import { Score } from '@/models'
+import { Choice } from '@/models'
 //import Choice from '@/models/Choice'
 
 export default {
@@ -80,14 +90,16 @@ export default {
                 title: "",
                 answer: "",
                 type: "text",
-                // choice1: "",
-                // choice2: "",
-                // choice3: "",
+                choices: [{
+                    name: '',
+                    input: '1'
+                }]
             }],
             totalScore: "",
             count: 1,
             status: false,
-            choices: []
+
+
         }
     }, computed: {
         isRoute() {
@@ -108,6 +120,10 @@ export default {
         dateTime() {
             return this.quizDate;
         },
+        getChoice() {
+            return Question.query().where('quiz_id', this.quiz.id).with('choices').get()
+        }
+
 
     },
     methods: {
@@ -120,7 +136,7 @@ export default {
                     answer: "",
                     type: "text",
                     score: "",
-
+                    choices: []
                 }),
                 this.status = "Draft",
                 console.log(typeof this.status),
@@ -136,36 +152,94 @@ export default {
             this.questions.splice(index, 1)
 
         },
-        addChoice: function () {
-            return this.choices.push({
-                choice: '',
-                input: ''
+        addChoice: function (index) {
+            console.log('146', this.questions[index]);
+            this.questions[index].choices.push({
+                input: '',
+                name: ''
             })
+            console.log('146', this.questions[index].choices[0]);
+
+            // this.choices.push({ ans: "" })
+            // console.log('146', typeof index);
+            // index = { choice: this.choices }
+            // console.log('148', index);.
+            // console.log(this.questions[index].choices);
+            // this.questions[index]?.choices
+            // this.questions[index] = { item: '' }
+            //console.log(this.questions[index]); //ให้ค่าobj.
+            //this.questions[index]['choices'] = []
+            // this.questions[index]['choices']?.push({
+            //     item: 'test',
+            //     input: '123'
+            // })
+            // return this.question.choices.push({
+            //     item: '',
+            //     input: ''
+            // })
         },
 
-        removeChoice: function (index) {
-            this.choices.splice(index, 1)
+        removeChoice: function (indexOfQuestion, index) {
+            // this.choices.splice(index, 1)
+            this.questions[indexOfQuestion].choices.splice(index, 1)
+            // const arr = [{ ans: '', title: '', choice: [{ input: '', name: '' },{ input: '', name: '' },{ input: '', name: '' }] }]
+            // const input = arr[0].choice.splice(index, 1)
+        },
+        selectedChoice: function (index, indexOfQuestion) {
+            // console.log("180", e.target.id)
+            // const index = e.target.id.replace(/choice/i, "")
+            console.log("180", index, indexOfQuestion)
+            this.questions[indexOfQuestion].choices.map((item, i) => {
+                if (i === index) {
+                    console.log(this.questions[indexOfQuestion].choices[i].input)
+                    this.questions[indexOfQuestion].choices[i] = { input: "test", name: "" }
+                    console.log(this.questions[indexOfQuestion].choices[i].input)
+
+                } else {
+                    this.questions[indexOfQuestion].choices[i] = { input: "", name: "" }
+                    console.log(this.questions[indexOfQuestion].choices[i].input)
+
+                }
+            })
+
+
         },
 
         addData: async function () {
-            // console.log(this.quizId);
-            // console.log({ quiz: this.quizId });
-            // this.questions.push({ quiz: this.quizId })
-
             // const dateTimeInput = new Date(this.quizDate);
             // const dateTimeNow = new Date();
             // console.log('now ===', dateTimeNow)
             // console.log('QuizDate ===', dateTimeInput)
             // console.log(typeof this.quizDate)
             console.log('169', this.questions);
+            console.log('choice', this.questions[0].choices);
             for (let index = 0; index < this.questions.length; index++) {
                 const item = this.questions[index];
-                item.quiz = this.quizId;
+                console.log('item', item);
+                item.quiz = this.quizId
+                //item.question = this.getQuestions[0].id;
+                //item.question_choice = item.choices;
+                //console.log('choice', item.question_choice);
                 //item.post_at = new Date(this.dateTime);
             }
             console.log('175', this.questions);
-            //const titleQuestion = await Question.api().postQuestions(this.questions)
 
+            // if (this.questions[0].choices) {
+            //     await this.questions[0].choices.forEach(item => {
+            //         Choice.api().postChoice({
+            //             question: item.name
+            //         })
+            //     });
+            // } else if (!this.questions[0].choices) {
+            //     //await Question.api().postQuestions(this.questions)
+            //     console.log('333333333333');
+            // }
+
+            // console.log('175', this.questions.forEach(item => {
+            //     console.log(item.choices[0].name);
+            // }));
+            //console.log('197', this.questions[0].choices);
+            const titleQuestion = await Question.api().postQuestions(this.questions)
             // this.questions.forEach(async (item, index) => {
             //     console.log('foreach' + index, item);
             //         question_name: item.title,
@@ -175,8 +249,8 @@ export default {
             //         question_choice1: item.choice1,
             //         question_choice2: item.choice2,
             //         question_choice3: item.choice3,
-            //     })
-            //console.log(titleQuestion);
+            //    })
+            console.log(titleQuestion);
             //this.$router.push({ name: 'HomeTeacherPage' })
 
             //this.$router.push({ name: 'HomeStudentPage', params: { quizId: this.quizId } })
@@ -239,6 +313,8 @@ export default {
     },
     async mounted() {
         await Quiz.api().getQuizById(this.quizId)
+        // console.log(await Quiz.api().getQuizById(this.quizId));
+        await Choice.api().getChoice()
         // const question = await Question.api().getQuestionById(this.quizId)
         // console.log(this.quiz.questions_id);
         console.log('mouted', this.getQuestions);

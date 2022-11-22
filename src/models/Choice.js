@@ -29,6 +29,9 @@ export class Choice extends BaseModel {
       postChoice(body = {}) {
             return this.post('/choices', body)  
       }, 
+      getChoiceById(id, params = {}) {
+        return this.get(`/choices/${id}`, params)
+      },
     },
   };
 }
